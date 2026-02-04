@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For You ❤️</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.container {
+  text-align: center;
+  background: rgba(255,255,255,0.2);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  color: white;
+  max-width: 90vw;
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+button {
+  padding: 12px 25px;
+  font-size: 18px;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  margin: 10px;
+}
+
+#enterBtn { background: white; color: #ff4b6e; }
+#yesBtn { background: #4CAF50; color: white; }
+
+#noBtn {
+  background: #f44336;
+  color: white;
+  position: absolute;
+}
+
+.hidden { display: none; }
+
+img {
+  width: 220px;
+  border-radius: 20px;
+  margin-top: 15px;
+  animation: reveal 2s ease;
+}
+
+@keyframes reveal {
+  from { opacity: 0; transform: scale(0.3); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* GAME */
+#heart {
+  font-size: 38px;
+  position: absolute;
+  cursor: pointer;
+}
+
+/* Confetti */
+.confetti {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: white;
+  animation: fall 3s linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- PAGE 1 -->
+<div class="container center" id="page1">
+  <h1>Thank you for being part of my life 💖</h1>
+  <p>my cute friend affu (alien)🎀❤️</p>
+  <button id="enterBtn" onclick="goNext()">Enter</button>
+</div>
+
+<!-- PAGE 2 -->
+<div class="container center hidden" id="page2">
+  <h2>Will you be my best friend forever ♾️</h2>
+  <p>my cute friend affu (alien)🎀❤️</p>
+  <button id="yesBtn" onclick="yesClicked()">Yes 💚</button>
+  <button id="noBtn"
+    ontouchstart="moveNo(); return false;"
+    onmouseover="moveNo(); return false;"
+    onclick="return false;">No 😜</button>
+  <p id="tease"></p>
+</div>
+
+<!-- PAGE 3 -->
+<div class="container center hidden" id="page3">
+  <h2>Thank you for saying YES ❤️</h2>
+  <p>my cute friend affu (alien)🎀❤️</p>
+
+  <img src="<a href="https://ibb.co/TF0FSwP"><img src="https://i.ibb.co/GbMbLdC/Screenshot-2026-02-04-18-59-22-071-com-snapchat-android-edit.jpg" alt="Screenshot-2026-02-04-18-59-22-071-com-snapchat-android-edit" border="0"></a>>"
+
+  <br>
+  <button onclick="playSong()">🎵 Play Favourite Song</button>
+
+  <h3>Catch the Heart 💖</h3>
+  <p>Score: <span id="score">0</span></p>
+  <div id="heart" onclick="catchHeart()">💖</div>
+
+  <p id="winMsg"></p>
+</div>
+
+<audio id="song" src="friend.mp3"></audio>
+
+<script>
+let score = 0;
+const teaseTexts = [
+  "Oops 😜 missed me!",
+  "Not so easy 🤭",
+  "Haha try again 😏",
+  "You can't say NO 😈"
+];
+
+function goNext() {
+  page1.classList.add("hidden");
+  page2.classList.remove("hidden");
+
+  noBtn.style.left = "50%";
+  noBtn.style.top = "70%";
+  noBtn.style.transform = "translateX(-50%)";
+}
+
+function moveNo() {
+  if (navigator.vibrate) navigator.vibrate(80);
+
+  const noBtn = document.getElementById("noBtn");
+  const btnWidth = noBtn.offsetWidth;
+  const btnHeight = noBtn.offsetHeight;
+  const padding = 20;
+
+  const maxX = window.innerWidth - btnWidth - padding;
+  const maxY = window.innerHeight - btnHeight - padding;
+
+  noBtn.style.left = Math.random() * maxX + "px";
+  noBtn.style.top = Math.random() * maxY + "px";
+  noBtn.style.transform = "none";
+
+  document.getElementById("tease").innerText =
+    teaseTexts[Math.floor(Math.random() * teaseTexts.length)];
+}
+
+function yesClicked() {
+  page2.classList.add("hidden");
+  page3.classList.remove("hidden");
+  moveHeart();
+  confettiBlast();
+}
+
+function playSong() {
+  document.getElementById("song").play();
+}
+
+function moveHeart() {
+  const heart = document.getElementById("heart");
+  const size = 40;
+
+  const maxX = window.innerWidth - size - 10;
+  const maxY = window.innerHeight - size - 10;
+
+  heart.style.left = Math.random() * maxX + "px";
+  heart.style.top = Math.random() * maxY + "px";
+}
+
+function catchHeart() {
+  score++;
+  document.getElementById("score").innerText = score;
+  moveHeart();
+
+  if (score >= 5) {
+    document.getElementById("winMsg").innerText =
+      "You won my heart already 💕 Forever best friends ♾️";
+  }
+}
+
+function confettiBlast() {
+  for (let i = 0; i < 40; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * window.innerWidth + "px";
+    c.style.background = `hsl(${Math.random()*360},100%,70%)`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3000);
+  }
+}
+</script>
+
+</body>
+</html>
